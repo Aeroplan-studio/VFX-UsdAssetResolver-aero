@@ -1,7 +1,7 @@
 ### Configuration ###
 set(AR_PROJECT_NAME UsdAssetResolver)
 set(AR_RESOLVER_USD_PYTHON_MODULE_NAME usdAssetResolver)
-set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/dist" CACHE PATH "Default install dir")
+set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/dist/$ENV{AR_DCC_NAME}" CACHE PATH "Default install dir")
 
 # Env Vars
 set(AR_ENV_SEARCH_PATHS "AR_SEARCH_PATHS" CACHE STRING "Environment variable that holds the search path(s) for non absolute asset paths.")
@@ -157,6 +157,8 @@ elseif("$ENV{AR_DCC_NAME}" STREQUAL "MAYA")
     # Python
     set(AR_PYTHON_ROOT $ENV{PYTHON_ROOT} CACHE PATH "Python install directory")
     if (WIN32)
+        message("-------------------------------")
+        message(${AR_MAYA_USD_SDK_LIB_DIR})
         if(EXISTS "${AR_MAYA_USD_SDK_LIB_DIR}/boost_python311-vc143-mt-x64-1_81.dll")
             set(AR_PYTHON_LIB python3.11)
             set(AR_PYTHON_LIB_NUMBER python311)
