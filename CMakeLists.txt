@@ -154,10 +154,10 @@ elseif("$ENV{AR_DCC_NAME}" STREQUAL "MAYA")
     set(AR_MAYA_USD_SDK_DEVKIT_ROOT $ENV{MAYA_USD_SDK_DEVKIT_ROOT} CACHE PATH "Maya USD SDK DevKit install directory")
     set(AR_MAYA_USD_SDK_LIB_DIR ${AR_MAYA_USD_SDK_ROOT}/lib)
     set(AR_MAYA_INCLUDE_DIR ${AR_MAYA_USD_SDK_DEVKIT_ROOT}/include)
+    
     # Python
     set(AR_PYTHON_ROOT $ENV{PYTHON_ROOT} CACHE PATH "Python install directory")
     if (WIN32)
-        message("-------------------------------")
         message(${AR_MAYA_USD_SDK_LIB_DIR})
         if(EXISTS "${AR_MAYA_USD_SDK_LIB_DIR}/boost_python311-vc143-mt-x64-1_81.dll")
             set(AR_PYTHON_LIB python3.11)
@@ -188,6 +188,7 @@ elseif("$ENV{AR_DCC_NAME}" STREQUAL "MAYA")
         set(AR_PYTHON_INCLUDE_DIR ${AR_PYTHON_ROOT}/include/${AR_PYTHON_LIB})
     endif()
     set(AR_PYTHON_EXECUTABLE ${AR_PYTHON_ROOT}/bin/python3)
+    
     # Boost
     set(AR_BOOST_NAMESPACE boost)
     if (WIN32)
@@ -204,6 +205,7 @@ elseif("$ENV{AR_DCC_NAME}" STREQUAL "MAYA")
         set(AR_BOOST_PYTHON_LIB ${AR_BOOST_NAMESPACE}_${AR_PYTHON_LIB_NUMBER})
         set(AR_BOOST_INCLUDE_DIR ${AR_MAYA_INCLUDE_DIR}/${AR_BOOST_NAMESPACE})
     endif()
+    
     # Usd
     if (WIN32)
         set(AR_PXR_LIB_DIR ${AR_MAYA_USD_SDK_DEVKIT_ROOT}/lib)
@@ -214,6 +216,27 @@ elseif("$ENV{AR_DCC_NAME}" STREQUAL "MAYA")
     endif()
     set(AR_PXR_INCLUDE_DIR ${AR_MAYA_USD_SDK_DEVKIT_ROOT}/include)
     set(AR_PXR_PYTHON_LIB_SITEPACKAGES ${AR_MAYA_USD_SDK_ROOT}/lib/python)
+elseif("$ENV{AR_DCC_NAME}" STREQUAL "KATANA")
+    # Python
+    set(AR_PYTHON_ROOT $ENV{PYTHON_ROOT} CACHE PATH "Python install directory")
+    set(AR_PYTHON_LIB python3.9)
+    set(AR_PYTHON_LIB_NUMBER python39)
+    set(AR_PYTHON_LIB_DIR ${AR_PYTHON_ROOT}/libs)
+    set(AR_PYTHON_INCLUDE_DIR ${AR_PYTHON_ROOT}/include)
+    set(AR_PYTHON_EXECUTABLE ${AR_PYTHON_ROOT}/bin/python)
+    
+    # Boost
+    set(AR_BOOST_NAMESPACE boost)
+    set(AR_BOOST_PYTHON_LIB foundryboost_${AR_PYTHON_LIB_NUMBER}-vc142-mt-x64-1_76)
+    set(AR_BOOST_INCLUDE_DIR $ENV{KATANA_ROOT}/external/foundryboost/include/boost-1_76)
+    
+    # Usd
+    set(AR_PXR_LIB_DIR $ENV{KATANA_ROOT}/bin)
+    set(AR_PXR_LIB_PREFIX "fn")
+    set(AR_PXR_INCLUDE_DIR $ENV{KATANA_ROOT}/external/FnUSD/include)
+    set(AR_PXR_PYTHON_LIB_SITEPACKAGES $ENV{KATANA_ROOT}/bin/lib)
+    
+    include_directories($ENV{KATANA_ROOT}/external/tbb/include)
 endif()
 
 ### Init ###
@@ -225,6 +248,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(BUILD_SHARED_LIBS ON)
 # Preprocessor Defines (Same as #define)
 add_compile_definitions(HBOOST_ALL_NO_LIB BOOST_ALL_NO_LIB)
+if ("$ENV{AR_DCC_NAME}" STREQUAL "KATANA")
+    add_compile_definitions(KATANA_BUILD)
+endif()
 if (WIN32)
     add_compile_definitions(NOMINMAX)
 else()
@@ -256,6 +282,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/defaults)
 # Boost Namespace Wrapper
 include(setBoostNamespace)
 include_directories(${CMAKE_SOURCE_DIR}/src/utils)
+
 # Houdini
 link_directories(${AR_HOUDINI_LIB_DIR})
 # Usd (Already provided via Houdini)

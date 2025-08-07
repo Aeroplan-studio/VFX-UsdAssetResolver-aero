@@ -1,6 +1,10 @@
 #define CONVERT_STRING(string) #string
 #define DEFINE_STRING(string) CONVERT_STRING(string)
 
+// #ifdef KATANA_BUILD
+// // namespace pxr = fnpxr;
+// #endif
+
 #include "resolverContext.h"
 #include "resolverTokens.h"
 
@@ -132,7 +136,7 @@ bool CachedResolverContext::_GetMappingPairsFromUsdFile(const std::string& fileP
     if (!mappingDataPtr){
         return false;
     }
-    pxr::VtStringArray mappingDataArray = mappingDataPtr->Get<pxr::VtStringArray>();
+    fnpxr::VtStringArray mappingDataArray = mappingDataPtr->Get<fnpxr::VtStringArray>();
     if (mappingDataArray.size() % 2 != 0){
         return false;
     }
