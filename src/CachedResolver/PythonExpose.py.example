@@ -3,8 +3,10 @@ import logging
 import os
 from functools import wraps
 
-from pxr import Ar
-
+try:
+    from pxr import Ar
+except ImportError:
+    from fnpxr import Ar
 
 # Init logger
 logging.basicConfig(format="%(asctime)s %(message)s", datefmt="%Y/%m/%d %I:%M:%S%p")
@@ -70,7 +72,7 @@ class Resolver:
         LOG.debug("::: Resolver.CreateRelativePathIdentifier | {} | {} | {}".format(anchoredAssetPath, assetPath, anchorAssetPath))
         """The code below is only needed to verify that UnitTests work."""
         UnitTestHelper.create_relative_path_identifier_call_counter += 1
-        remappedRelativePathIdentifier = f"relativePath|{assetPath}?{anchorAssetPath}".replace("//", "/")
+        remappedRelativePathIdentifier = f"relativePath|{assetPath}?{anchorAssetPath}".replace("\\", "/")
         resolver.AddCachedRelativePathIdentifierPair(anchoredAssetPath, remappedRelativePathIdentifier)
         return remappedRelativePathIdentifier
 
@@ -94,7 +96,6 @@ class ResolverContext:
         """The code below is only needed to verify that UnitTests work."""
         UnitTestHelper.context_initialize_call_counter += 1
         context.AddCachingPair("shot.usd", "/some/path/to/a/file.usd")
-        # context.AddCachingPair("my_test_usd.usd", "D:/tmp/pomogator_alt.usd")
         return
 
     @staticmethod
@@ -113,20 +114,6 @@ class ResolverContext:
         LOG.debug(
             "::: ResolverContext.ResolveAndCache | {} | {}".format(assetPath, context.GetCachingPairs())
         )
-        resolved_asset_path=assetPath
-        if assetPath == "my_test_usd.usd":
-            context.AddCachingPair("my_test_usd.usd", "C:/sm_temp/Fixies5/models/chars/fixies/nolik/usd/nolik.main.usd")
-            resolved_asset_path = "C:/sm_temp/Fixies5/models/chars/fixies/nolik/usd/nolik.main.usd"
-        path_prefix='aerofile:'
-        if assetPath.startswith(path_prefix) :
-            root =   'C:/sm_temp'
-            resolved_asset_path = assetPath.replace(path_prefix, root)
-            context.AddCachingPair(assetPath, resolved_asset_path)
-            print (f"resolved_asset_path: {resolved_asset_path}")
-        
-        print (f"resolved_asset_path: {resolved_asset_path}")
-        return resolved_asset_path
-
         """Implement custom resolve logic and add the resolved path to the cache.
         resolved_asset_path = "/some/path/to/a/file.usd"
         context.AddCachingPair(assetPath, resolved_asset_path)
@@ -151,5 +138,4 @@ class ResolverContext:
             anchor_path = anchor_path[:-1] if anchor_path[-1] == "/" else anchor_path[:anchor_path.rfind("/")]
             resolved_asset_path = os.path.normpath(os.path.join(anchor_path, relative_path))
             context.AddCachingPair(assetPath, resolved_asset_path)
-        print (f"resolved_asset_path: {resolved_asset_path}")
         return resolved_asset_path
