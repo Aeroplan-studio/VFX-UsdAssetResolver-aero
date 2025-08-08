@@ -26,7 +26,19 @@ Safety-wise we lock via a mutex when we don't have a cache hit.
 In theory we probably don't need this, as our Python call does this anyway.
 See the _Resolve method for more information.
 */
+
+#ifdef KATANA_BUILD
+// Thread-safe initialization for Katana
+static std::mutex& GetResolverMutex() {
+    static std::mutex instance;
+    return instance;
+}
+#define RESOLVER_MUTEX GetResolverMutex()
+#else
+// Keep existing approach for Maya/Houdini
 static std::mutex g_resolver_query_mutex;
+#define RESOLVER_MUTEX g_resolver_query_mutex
+#endif
 
 PXR_NAMESPACE_USING_DIRECTIVE
 
@@ -224,8 +236,8 @@ const std::string CachedResolverContext::ResolveAndCachePair(const std::string& 
         locked resolver context. While it works, be aware that potential side effects may occur.
         This allows us to populate multiple cachePairs to allow for batch loading.
         */
-        const std::lock_guard<std::mutex> lock(g_resolver_query_mutex);
-
+        // const std::lock_guard<std::mutex> lock(g_resolver_query_mutex);
+        // const std::lock_guard<std::mutex> lock(RESOLVER_MUTEX);
         TF_DEBUG(CACHEDRESOLVER_RESOLVER_CONTEXT).Msg("ResolverContext::ResolveAndCachePair('%s')\n", assetPath.c_str());
         
         int state = TfPyInvokeAndExtract(DEFINE_STRING(AR_CACHEDRESOLVER_USD_PYTHON_EXPOSE_MODULE_NAME),
