@@ -235,8 +235,6 @@ elseif("$ENV{AR_DCC_NAME}" STREQUAL "KATANA")
     set(AR_PXR_LIB_PREFIX "fn")
     set(AR_PXR_INCLUDE_DIR $ENV{KATANA_ROOT}/external/FnUSD/include)
     set(AR_PXR_PYTHON_LIB_SITEPACKAGES $ENV{KATANA_ROOT}/bin/lib)
-    
-    include_directories($ENV{KATANA_ROOT}/external/tbb/include)
 endif()
 
 ### Init ###
@@ -248,9 +246,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(BUILD_SHARED_LIBS ON)
 # Preprocessor Defines (Same as #define)
 add_compile_definitions(HBOOST_ALL_NO_LIB BOOST_ALL_NO_LIB)
-if ("$ENV{AR_DCC_NAME}" STREQUAL "KATANA")
-    add_compile_definitions(KATANA_BUILD)
-endif()
 if (WIN32)
     add_compile_definitions(NOMINMAX)
 else()
@@ -268,6 +263,9 @@ else()
         endif()
     endif()
 endif()
+if ("$ENV{AR_DCC_NAME}" STREQUAL "KATANA")
+    add_compile_definitions(KATANA_BUILD) # needed for replacing namespace pxr to fnpxr in resolverContext.cpp
+endif()
 # Compiler Options
 # This is the same as set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHBOOST_ALL_NO_LIB -D_GLIBCXX_USE_CXX11_ABI=0")
 if (WIN32)
@@ -282,7 +280,9 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/defaults)
 # Boost Namespace Wrapper
 include(setBoostNamespace)
 include_directories(${CMAKE_SOURCE_DIR}/src/utils)
-
+if("$ENV{AR_DCC_NAME}" STREQUAL "KATANA")
+    include_directories($ENV{KATANA_ROOT}/external/tbb/include)
+endif()
 # Houdini
 link_directories(${AR_HOUDINI_LIB_DIR})
 # Usd (Already provided via Houdini)

@@ -1,10 +1,6 @@
 #define CONVERT_STRING(string) #string
 #define DEFINE_STRING(string) CONVERT_STRING(string)
 
-// #ifdef KATANA_BUILD
-// // namespace pxr = fnpxr;
-// #endif
-
 #include "resolverContext.h"
 #include "resolverTokens.h"
 
@@ -13,6 +9,12 @@
 #include "pxr/base/tf/pathUtils.h"
 #include "pxr/base/tf/pyInvoke.h"
 #include <pxr/usd/sdf/layer.h>
+
+#ifdef KATANA_BUILD
+    namespace vt_ns = fnpxr;
+#else
+    namespace vt_ns = pxr;
+#endif
 
 #include <iostream>
 #include <mutex>
@@ -136,7 +138,7 @@ bool CachedResolverContext::_GetMappingPairsFromUsdFile(const std::string& fileP
     if (!mappingDataPtr){
         return false;
     }
-    fnpxr::VtStringArray mappingDataArray = mappingDataPtr->Get<fnpxr::VtStringArray>();
+    vt_ns::VtStringArray mappingDataArray = mappingDataPtr->Get<vt_ns::VtStringArray>();
     if (mappingDataArray.size() % 2 != 0){
         return false;
     }
