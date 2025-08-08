@@ -3,8 +3,10 @@ import logging
 import os
 from functools import wraps
 
-from pxr import Ar
-
+try:
+    from pxr import Ar
+except:
+    from fnpxr import Ar
 
 # Init logger
 logging.basicConfig(format="%(asctime)s %(message)s", datefmt="%Y/%m/%d %I:%M:%S%p")
