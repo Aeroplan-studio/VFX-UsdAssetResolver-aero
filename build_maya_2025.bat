@@ -3,7 +3,7 @@ cls
 REM Source environment (Uncomment lines starting with "set" if you current env does not have these defined.)
 REM set HFS=C:\Program Files\Side Effects Software\Houdini 19.5.435
 REM Define Resolver > Has to be one of 'fileResolver'/'pythonResolver'/'cachedResolver'/'httpResolver'
-set AR_RESOLVER_NAME=fileResolver
+set AR_RESOLVER_NAME=cachedResolver
 REM Define App: MAYA
 set AR_DCC_NAME=MAYA
 set MAYA_USD_SDK_ROOT=c:/MayaUSD/Maya2025/0.29.0/mayausd/USD
