@@ -141,7 +141,7 @@ bool CachedResolverContext::_GetMappingPairsFromUsdFile(const std::string& fileP
     {
         return false;
     }
-    auto layer = SdfLayer::FindOrOpen(filePath);
+    auto layer = SdfLayer::OpenAsAnonymous(filePath);
     if (!layer){
         return false;
     }
