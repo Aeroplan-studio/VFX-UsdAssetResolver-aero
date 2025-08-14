@@ -12,6 +12,7 @@
 #include "pxr/base/tf/staticTokens.h"
 #include "pxr/base/tf/stringUtils.h"
 #include "pxr/usd/sdf/layer.h"
+#include "pxr/usd/ar/assetInfo.h"
 #include "pxr/usd/ar/defineResolver.h"
 #include "pxr/usd/ar/filesystemAsset.h"
 #include "pxr/usd/ar/filesystemWritableAsset.h"
@@ -347,6 +348,23 @@ CachedResolver::_GetExtension(
     }
     // Extract and return the extension (without the dot)
     return assetPath.substr(dotPos + 1);
+}
+
+ArAssetInfo
+CachedResolver::_GetAssetInfo(
+    const std::string& assetPath,
+    const ArResolvedPath& resolvedPath) const
+{
+    TF_DEBUG(CACHEDRESOLVER_RESOLVER).Msg(
+        "Resolver::_GetAssetInfo('%s', '%s')\n",
+        assetPath.c_str(), resolvedPath.GetPathString().c_str());
+    
+    // Create and return a default ArAssetInfo
+    // ArAssetInfo typically contains metadata about the asset such as
+    // version, size, modification time, etc.
+    // For the CachedResolver, we return a default-constructed ArAssetInfo
+    // which should be sufficient for most use cases
+    return ArAssetInfo();
 }
 
 bool

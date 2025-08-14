@@ -84,6 +84,10 @@ protected:
     std::string _GetExtension(
         const std::string& assetPath) const final;
     AR_CACHEDRESOLVER_API
+    ArAssetInfo _GetAssetInfo(
+        const std::string& assetPath,
+        const ArResolvedPath& resolvedPath) const final;
+    AR_CACHEDRESOLVER_API
     bool _IsContextDependentPath(
         const std::string& assetPath) const final;
     AR_CACHEDRESOLVER_API
