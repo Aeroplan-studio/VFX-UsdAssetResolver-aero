@@ -334,6 +334,21 @@ CachedResolver::_CreateContextFromString(
     return ArResolverContext(_fallbackContext);
 }
 
+std::string
+CachedResolver::_GetExtension(
+    const std::string& assetPath) const
+{
+    TF_DEBUG(CACHEDRESOLVER_RESOLVER).Msg("Resolver::_GetExtension('%s')\n", assetPath.c_str());
+    // Find the last dot in the asset path
+    size_t dotPos = assetPath.find_last_of('.');
+    if (dotPos == std::string::npos) {
+        // No extension found, return empty string
+        return std::string();
+    }
+    // Extract and return the extension (without the dot)
+    return assetPath.substr(dotPos + 1);
+}
+
 bool
 CachedResolver::_IsContextDependentPath(
     const std::string& assetPath) const

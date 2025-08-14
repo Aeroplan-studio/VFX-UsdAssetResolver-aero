@@ -81,6 +81,9 @@ protected:
     ArResolverContext _CreateContextFromString(
         const std::string& contextStr) const final;
     AR_CACHEDRESOLVER_API
+    std::string _GetExtension(
+        const std::string& assetPath) const final;
+    AR_CACHEDRESOLVER_API
     bool _IsContextDependentPath(
         const std::string& assetPath) const final;
     AR_CACHEDRESOLVER_API
