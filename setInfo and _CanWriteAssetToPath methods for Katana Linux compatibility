@@ -1,0 +1,3 @@
+[33m771c1b7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mkatana-6.0-linux[m[33m, [m[1;31morigin/katana-6.0-linux[m[33m)[m Fix Katana Linux undefined symbols: Add _CreateContextFromString and _GetExtension methods
+[33md67412d[m add CreateContext
+[33mf1de770[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m updated Katana6 build

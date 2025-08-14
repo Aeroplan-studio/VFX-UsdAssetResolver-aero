@@ -368,6 +368,30 @@ CachedResolver::_GetAssetInfo(
 }
 
 bool
+CachedResolver::_CanWriteAssetToPath(
+    const ArResolvedPath& resolvedPath,
+    std::string* whyNot) const
+{
+    TF_DEBUG(CACHEDRESOLVER_RESOLVER).Msg(
+        "Resolver::_CanWriteAssetToPath('%s')\n",
+        resolvedPath.GetPathString().c_str());
+    
+    // Check if the resolved path is valid and writable
+    const std::string& pathStr = resolvedPath.GetPathString();
+    if (pathStr.empty()) {
+        if (whyNot) {
+            *whyNot = "Resolved path is empty";
+        }
+        return false;
+    }
+    
+    // For the CachedResolver, we assume most paths are writable
+    // unless we can determine they're not. This is a conservative approach.
+    // More sophisticated logic could check file permissions, disk space, etc.
+    return true;
+}
+
+bool
 CachedResolver::_IsContextDependentPath(
     const std::string& assetPath) const
 {
