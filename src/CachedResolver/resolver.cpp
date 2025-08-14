@@ -7,6 +7,7 @@
 #include "pxr/base/arch/systemInfo.h"
 #include "pxr/base/tf/fileUtils.h"
 #include "pxr/base/tf/getenv.h"
+#include "pxr/base/tf/getcwd.h"
 #include "pxr/base/tf/pathUtils.h"
 #include "pxr/base/tf/pyInvoke.h"
 #include "pxr/base/tf/staticTokens.h"
@@ -389,6 +390,18 @@ CachedResolver::_CanWriteAssetToPath(
     // unless we can determine they're not. This is a conservative approach.
     // More sophisticated logic could check file permissions, disk space, etc.
     return true;
+}
+
+bool
+CachedResolver::_IsRepositoryPath(
+    const std::string& assetPath) const
+{
+    TF_DEBUG(CACHEDRESOLVER_RESOLVER).Msg(
+        "Resolver::_IsRepositoryPath('%s')\n", assetPath.c_str());
+    
+    // For CachedResolver, we don't have a concept of repository paths
+    // Return false to indicate this is not a repository path
+    return false;
 }
 
 bool

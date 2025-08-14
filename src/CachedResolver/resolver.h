@@ -92,6 +92,9 @@ protected:
         const ArResolvedPath& resolvedPath,
         std::string* whyNot) const final;
     AR_CACHEDRESOLVER_API
+    bool _IsRepositoryPath(
+        const std::string& assetPath) const final;
+    AR_CACHEDRESOLVER_API
     bool _IsContextDependentPath(
         const std::string& assetPath) const final;
     AR_CACHEDRESOLVER_API
