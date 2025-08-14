@@ -42,7 +42,7 @@ AR_DEFINE_RESOLVER(CachedResolver, ArResolver);
 static bool
 _IsRelativePath(const std::string& path)
 {
-    return (!path.empty() && TfIsRelativePath(path));
+    return (!path.empty() && path[0] != '/');
 }
 
 static bool
@@ -61,7 +61,7 @@ _AnchorRelativePath(
     const std::string& anchorPath, 
     const std::string& path)
 {
-    if (TfIsRelativePath(anchorPath) ||
+    if ((!anchorPath.empty() && anchorPath[0] != '/') ||
         !_IsFileRelativePath(path)) {
         return path;
     }
