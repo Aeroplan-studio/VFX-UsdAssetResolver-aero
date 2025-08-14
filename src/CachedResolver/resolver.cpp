@@ -7,7 +7,6 @@
 #include "pxr/base/arch/systemInfo.h"
 #include "pxr/base/tf/fileUtils.h"
 #include "pxr/base/tf/getenv.h"
-#include "pxr/base/tf/getcwd.h"
 #include "pxr/base/tf/pathUtils.h"
 #include "pxr/base/tf/pyInvoke.h"
 #include "pxr/base/tf/staticTokens.h"
