@@ -71,7 +71,12 @@ _AnchorRelativePath(
     // If anchorPath does not end with a '/', we assume it is specifying
     // a file, strip off the last component, and anchor the path to that
     // directory.
-    const std::string anchoredPath = TfStringCatPaths(TfStringGetBeforeSuffix(forwardPath, '/'), path);
+    std::string directoryPath = forwardPath;
+    size_t lastSlash = directoryPath.find_last_of('/');
+    if (lastSlash != std::string::npos) {
+        directoryPath = directoryPath.substr(0, lastSlash);
+    }
+    const std::string anchoredPath = TfStringCatPaths(directoryPath, path);
     return TfNormPath(anchoredPath);
 }
 
