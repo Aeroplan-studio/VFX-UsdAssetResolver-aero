@@ -92,23 +92,6 @@ protected:
         const ArResolvedPath& resolvedPath,
         std::string* whyNot) const final;
     AR_CACHEDRESOLVER_API
-    bool _IsRepositoryPath(
-        const std::string& assetPath) const final;
-    AR_CACHEDRESOLVER_API
-    ArResolvedPath _GetResolvedPath(
-        const std::string& assetPath) const final;
-    AR_CACHEDRESOLVER_API
-    std::string _GetRepositoryPath(
-        const std::string& assetPath) const final;
-    AR_CACHEDRESOLVER_API
-    ArResolverContext _CreateContextFromStrings(
-        const std::vector<std::string>& contextStrs) const final;
-    AR_CACHEDRESOLVER_API
-    bool _IsSearchPath(
-        const std::string& path) const final;
-    AR_CACHEDRESOLVER_API
-    std::string _GetCurrentWorkingDirectory() const final;
-    AR_CACHEDRESOLVER_API
     bool _IsContextDependentPath(
         const std::string& assetPath) const final;
     AR_CACHEDRESOLVER_API

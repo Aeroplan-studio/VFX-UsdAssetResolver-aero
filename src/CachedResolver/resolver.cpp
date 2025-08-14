@@ -7,7 +7,6 @@
 #include "pxr/base/arch/systemInfo.h"
 #include "pxr/base/tf/fileUtils.h"
 #include "pxr/base/tf/getenv.h"
-#include "pxr/base/tf/getcwd.h"
 #include "pxr/base/tf/pathUtils.h"
 #include "pxr/base/tf/pyInvoke.h"
 #include "pxr/base/tf/staticTokens.h"
@@ -390,79 +389,6 @@ CachedResolver::_CanWriteAssetToPath(
     // unless we can determine they're not. This is a conservative approach.
     // More sophisticated logic could check file permissions, disk space, etc.
     return true;
-}
-
-bool
-CachedResolver::_IsRepositoryPath(
-    const std::string& assetPath) const
-{
-    TF_DEBUG(CACHEDRESOLVER_RESOLVER).Msg(
-        "Resolver::_IsRepositoryPath('%s')\n", assetPath.c_str());
-    
-    // For CachedResolver, we don't have a concept of repository paths
-    // Return false to indicate this is not a repository path
-    return false;
-}
-
-ArResolvedPath
-CachedResolver::_GetResolvedPath(
-    const std::string& assetPath) const
-{
-    TF_DEBUG(CACHEDRESOLVER_RESOLVER).Msg(
-        "Resolver::_GetResolvedPath('%s')\n", assetPath.c_str());
-    
-    // This is similar to _Resolve but may have different semantics
-    // For now, delegate to our existing _Resolve implementation
-    return this->_Resolve(assetPath);
-}
-
-std::string
-CachedResolver::_GetRepositoryPath(
-    const std::string& assetPath) const
-{
-    TF_DEBUG(CACHEDRESOLVER_RESOLVER).Msg(
-        "Resolver::_GetRepositoryPath('%s')\n", assetPath.c_str());
-    
-    // Since we don't support repository paths in CachedResolver,
-    // return empty string
-    return std::string();
-}
-
-ArResolverContext
-CachedResolver::_CreateContextFromStrings(
-    const std::vector<std::string>& contextStrs) const
-{
-    TF_DEBUG(CACHEDRESOLVER_RESOLVER_CONTEXT).Msg("Resolver::_CreateContextFromStrings()\n");
-    
-    // If no strings provided, return fallback context
-    if (contextStrs.empty()) {
-        return ArResolverContext(_fallbackContext);
-    }
-    
-    // For simplicity, use the first string as the context
-    // More sophisticated logic could combine multiple strings
-    return this->_CreateContextFromString(contextStrs[0]);
-}
-
-bool
-CachedResolver::_IsSearchPath(
-    const std::string& path) const
-{
-    TF_DEBUG(CACHEDRESOLVER_RESOLVER).Msg(
-        "Resolver::_IsSearchPath('%s')\n", path.c_str());
-    
-    // For CachedResolver, we don't use search paths in the traditional sense
-    // Return false as paths are resolved through mapping/caching
-    return false;
-}
-
-std::string
-CachedResolver::_GetCurrentWorkingDirectory() const
-{
-    TF_DEBUG(CACHEDRESOLVER_RESOLVER).Msg("Resolver::_GetCurrentWorkingDirectory()\n");
-    
-    // Return the current working directory
-    return TfGetcwd();
 }
 
 bool
