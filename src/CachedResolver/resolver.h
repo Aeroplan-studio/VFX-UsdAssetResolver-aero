@@ -78,6 +78,9 @@ protected:
     ArResolverContext _CreateDefaultContextForAsset(
         const std::string& assetPath) const final; 
     AR_CACHEDRESOLVER_API
+    ArResolverContext _CreateContextFromString(
+        const std::string& contextStr) const final;
+    AR_CACHEDRESOLVER_API
     bool _IsContextDependentPath(
         const std::string& assetPath) const final;
     AR_CACHEDRESOLVER_API

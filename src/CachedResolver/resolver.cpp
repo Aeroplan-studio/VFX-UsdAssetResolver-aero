@@ -313,6 +313,27 @@ CachedResolver::_CreateDefaultContextForAsset(
     return ArResolverContext(record.ctx);
 }
 
+ArResolverContext
+CachedResolver::_CreateContextFromString(
+    const std::string& contextStr) const
+{
+    TF_DEBUG(CACHEDRESOLVER_RESOLVER_CONTEXT).Msg("Resolver::_CreateContextFromString('%s')\n", contextStr.c_str());
+    // If contextStr is empty, return the fallback context
+    if (contextStr.empty()) {
+        return ArResolverContext(_fallbackContext);
+    }
+    
+    // If contextStr is a file path that exists, create a context from it
+    if (TfPathExists(contextStr)) {
+        return ArResolverContext(CachedResolverContext(TfAbsPath(contextStr)));
+    }
+    
+    // Otherwise, return fallback context
+    // Note: More sophisticated string parsing could be implemented here if needed
+    // for specific context string formats in the future
+    return ArResolverContext(_fallbackContext);
+}
+
 bool
 CachedResolver::_IsContextDependentPath(
     const std::string& assetPath) const
