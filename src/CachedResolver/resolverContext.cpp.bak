@@ -10,12 +10,6 @@
 #include "pxr/base/tf/pyInvoke.h"
 #include <pxr/usd/sdf/layer.h>
 
-#ifdef KATANA_BUILD
-    namespace vt_ns = fnpxr;
-#else
-    namespace vt_ns = pxr;
-#endif
-
 #include <iostream>
 #include <mutex>
 #include <thread>
@@ -26,19 +20,7 @@ Safety-wise we lock via a mutex when we don't have a cache hit.
 In theory we probably don't need this, as our Python call does this anyway.
 See the _Resolve method for more information.
 */
-
-#ifdef KATANA_BUILD
-// Thread-safe initialization for Katana
-static std::mutex& GetResolverMutex() {
-    static std::mutex instance;
-    return instance;
-}
-#define RESOLVER_MUTEX GetResolverMutex()
-#else
-// Keep existing approach for Maya/Houdini
 static std::mutex g_resolver_query_mutex;
-#define RESOLVER_MUTEX g_resolver_query_mutex
-#endif
 
 PXR_NAMESPACE_USING_DIRECTIVE
 
@@ -117,7 +99,7 @@ void CachedResolverContext::Initialize(){
                            "ResolverContext.Initialize",
                            this);
     if (!state) {
-        std::cerr << "Failed to call Resolver.Initialize in " << DEFINE_STRING(AR_CACHEDRESOLVER_USD_PYTHON_EXPOSE_MODULE_NAME) << ".py. ";
+        std::cerr << "Failed to call Resolver.ResolveAndCache in " << DEFINE_STRING(AR_CACHEDRESOLVER_USD_PYTHON_EXPOSE_MODULE_NAME) << ".py. ";
         std::cerr << "Please verify that the python code is valid!" << std::endl;
     }
 }
@@ -150,7 +132,7 @@ bool CachedResolverContext::_GetMappingPairsFromUsdFile(const std::string& fileP
     if (!mappingDataPtr){
         return false;
     }
-    vt_ns::VtStringArray mappingDataArray = mappingDataPtr->Get<vt_ns::VtStringArray>();
+    pxr::VtStringArray mappingDataArray = mappingDataPtr->Get<pxr::VtStringArray>();
     if (mappingDataArray.size() % 2 != 0){
         return false;
     }
@@ -236,8 +218,8 @@ const std::string CachedResolverContext::ResolveAndCachePair(const std::string& 
         locked resolver context. While it works, be aware that potential side effects may occur.
         This allows us to populate multiple cachePairs to allow for batch loading.
         */
-        // const std::lock_guard<std::mutex> lock(g_resolver_query_mutex);
-        // const std::lock_guard<std::mutex> lock(RESOLVER_MUTEX);
+        const std::lock_guard<std::mutex> lock(g_resolver_query_mutex);
+
         TF_DEBUG(CACHEDRESOLVER_RESOLVER_CONTEXT).Msg("ResolverContext::ResolveAndCachePair('%s')\n", assetPath.c_str());
         
         int state = TfPyInvokeAndExtract(DEFINE_STRING(AR_CACHEDRESOLVER_USD_PYTHON_EXPOSE_MODULE_NAME),
