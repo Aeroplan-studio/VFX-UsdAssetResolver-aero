@@ -3,9 +3,10 @@ clear
 # Source environment (Uncomment lines starting with "export" if you current env does not have these defined.)
 # export HFS=$SMESHARIKI_ROOT/sidefx/hfs19.5
 # Define Resolver > Has to be one of 'fileResolver'/'pythonResolver'/'cachedResolver'/'httpResolver'
-export AR_RESOLVER_NAME=fileResolver
+export AR_RESOLVER_NAME=cachedResolver
 # Define App
 export AR_DCC_NAME=KATANA
+export AR_DCC_VERSION=7.5
 export KATANA_ROOT=/server/sm/sm_tools/katana/distrib/Katana7.5v3
 export PYTHON_ROOT=/server/sm/sm_tools/katana/distrib/Katana7.5v3/bin/python3.10
 

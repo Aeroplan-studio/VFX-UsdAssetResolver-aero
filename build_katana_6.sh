@@ -6,6 +6,7 @@ clear
 export AR_RESOLVER_NAME=cachedResolver
 # Define App
 export AR_DCC_NAME=KATANA
+export AR_DCC_VERSION=6.0
 export KATANA_ROOT=/server/sm/sm_tools/katana/distrib/Katana6.0v1
 export PYTHON_ROOT=/server/sm/sm_tools/katana/distrib/Katana6.0v1/bin/python3.9
 

@@ -6,6 +6,7 @@ REM Define Resolver > Has to be one of 'fileResolver'/'pythonResolver'/'cachedRe
 set AR_RESOLVER_NAME=cachedResolver
 REM Define App
 set AR_DCC_NAME=HOUDINI
+set AR_DCC_VERSION=20.5
 REM Clear existing build data and invoke cmake
 rmdir /S /Q build
 @REM rmdir /S /Q dist

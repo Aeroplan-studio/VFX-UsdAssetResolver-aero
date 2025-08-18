@@ -112,6 +112,25 @@ class ResolverContext:
         LOG.debug(
             "::: ResolverContext.ResolveAndCache | {} | {}".format(assetPath, context.GetCachingPairs())
         )
+
+
+        resolved_asset_path=assetPath
+        if assetPath == "my_test_usd.usd":
+            context.AddCachingPair("my_test_usd.usd", "C:/sm_temp/Fixies5/models/chars/fixies/nolik/usd/nolik.main.usd")
+            resolved_asset_path = "C:/sm_temp/Fixies5/models/chars/fixies/nolik/usd/nolik.main.usd"
+        path_prefix='smassetfile:'
+        if assetPath.startswith(path_prefix) :
+            root =   '/space2'
+            resolved_asset_path = assetPath.replace(path_prefix, root)
+            resolved_asset_path = resolved_asset_path.replace('Technolike', 'technolike')
+            context.AddCachingPair(assetPath, resolved_asset_path)
+        
+        context.ClearCachingPairs()
+        print (f"resolved_asset_path: {resolved_asset_path}")
+        return resolved_asset_path
+
+
+
         resolved_asset_path = "/some/path/to/a/file.usd"
         context.AddCachingPair(assetPath, resolved_asset_path)
         """

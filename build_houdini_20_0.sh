@@ -7,6 +7,7 @@ export HFS=/opt/hfs20.0.896
 export AR_RESOLVER_NAME=cachedResolver
 # Define App
 export AR_DCC_NAME=HOUDINI
+export AR_DCC_VERSION=20.0
 # Clear existing build data and invoke cmake
 # rm -R build
 # rm -R dist

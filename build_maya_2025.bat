@@ -6,6 +6,7 @@ REM Define Resolver > Has to be one of 'fileResolver'/'pythonResolver'/'cachedRe
 set AR_RESOLVER_NAME=cachedResolver
 REM Define App: MAYA
 set AR_DCC_NAME=MAYA
+set AR_DCC_VERSION=2025
 set MAYA_USD_SDK_ROOT=c:/MayaUSD/Maya2025/0.29.0/mayausd/USD
 REM set MAYA_USD_SDK_ROOT="c:\projects\maya-usd"
 set MAYA_USD_SDK_DEVKIT_ROOT=C:/devkit

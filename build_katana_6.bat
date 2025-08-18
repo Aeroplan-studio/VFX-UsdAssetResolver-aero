@@ -6,6 +6,7 @@ REM Define Resolver > Has to be one of 'fileResolver'/'pythonResolver'/'cachedRe
 set AR_RESOLVER_NAME=cachedResolver
 REM Define App: MAYA
 set AR_DCC_NAME=KATANA
+set AR_DCC_VERSION=6.0
 set KATANA_ROOT=c:/Program Files/Katana6.0v1
 set PYTHON_ROOT=C:/Users/user/AppData/Local/Programs/Python/Python39
 
