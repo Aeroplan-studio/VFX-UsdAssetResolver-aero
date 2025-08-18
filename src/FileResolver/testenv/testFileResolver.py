@@ -3,10 +3,7 @@ import tempfile
 import os
 import unittest
 
-try:
-    from pxr import Ar, Sdf, Usd, Vt
-except ImportError:
-    from fnpxr import Ar, Sdf, Usd, Vt
+from pxr import Ar, Sdf, Usd, Vt
 from usdAssetResolver import FileResolver
 
 class TestArResolver(unittest.TestCase):

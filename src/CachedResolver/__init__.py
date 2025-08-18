@@ -1,8 +1,4 @@
-try:
-    from pxr import Tf
-except ImportError:
-    from fnpxr import Tf
-
+from pxr import Tf
 Tf.PreparePythonModule()
 del Tf
 

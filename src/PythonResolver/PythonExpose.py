@@ -6,10 +6,7 @@ import os
 import sys
 from functools import wraps
 
-try:
-    from pxr import Ar, Sd
-except ImportError:
-    from fnpxr import Ar, Sd
+from pxr import Ar, Sdf
 from usdAssetResolver.PythonResolver import Tokens
 
 # Init logger

@@ -10,10 +10,11 @@ endif()
 ### Targets ###
 ## Target library > fileResolver ##
 add_library(${AR_FILERESOLVER_TARGET_LIB}
-    debugCodes.cpp
-    resolver.cpp
-    resolverContext.cpp
-    resolverTokens.cpp
+    SHARED
+        debugCodes.cpp
+        resolver.cpp
+        resolverContext.cpp
+        resolverTokens.cpp
 )
 set_boost_namespace(${AR_FILERESOLVER_TARGET_LIB})
 # Libs
@@ -52,12 +53,13 @@ install(TARGETS ${AR_FILERESOLVER_TARGET_LIB} DESTINATION ${AR_FILERESOLVER_USD_
 
 ## Target library > fileResolver Python ##
 add_library(${AR_FILERESOLVER_TARGET_PYTHON}
-    module.cpp
-    moduleDeps.cpp
-    resolverTokens.cpp
-    wrapResolver.cpp
-    wrapResolverContext.cpp
-    wrapResolverTokens.cpp
+    SHARED
+        module.cpp
+        moduleDeps.cpp
+        resolverTokens.cpp
+        wrapResolver.cpp
+        wrapResolverContext.cpp
+        wrapResolverTokens.cpp
 )
 add_dependencies(${AR_FILERESOLVER_TARGET_PYTHON} ${AR_FILERESOLVER_TARGET_LIB})
 set_boost_namespace(${AR_FILERESOLVER_TARGET_PYTHON})
