@@ -14,6 +14,44 @@ if (NOT WIN32)
     enable_testing()
 endif()
 
+
+set(IS_ROCKY_LINUX FALSE)
+set(IS_ROCKY_8 FALSE)
+set(IS_ROCKY_9 FALSE)
+set(ROCKY_MAJOR_VERSION "")
+set(ROCKY_MINOR_VERSION "")
+set(ROCKY_VERSION "")
+
+# Only attempt Rocky Linux detection on Unix-like systems
+if(UNIX AND NOT APPLE)
+    if(EXISTS "/etc/rocky-release")
+        file(READ "/etc/rocky-release" ROCKY_RELEASE_CONTENT)
+        string(STRIP "${ROCKY_RELEASE_CONTENT}" ROCKY_RELEASE_CONTENT)
+        
+        # Extract version number (e.g., "Rocky Linux release 8.7 (Green Obsidian)")
+        string(REGEX MATCH "Rocky Linux release ([0-9]+)\\.([0-9]+)" 
+               ROCKY_VERSION_MATCH "${ROCKY_RELEASE_CONTENT}")
+        
+        if(ROCKY_VERSION_MATCH)
+            set(ROCKY_MAJOR_VERSION ${CMAKE_MATCH_1})
+            set(ROCKY_MINOR_VERSION ${CMAKE_MATCH_2})
+            set(ROCKY_VERSION "${ROCKY_MAJOR_VERSION}.${ROCKY_MINOR_VERSION}")
+            set(IS_ROCKY_LINUX TRUE)
+            
+            message(STATUS "Detected Rocky Linux ${ROCKY_VERSION}")
+            
+            # Set convenient boolean flags
+            if(ROCKY_MAJOR_VERSION EQUAL 8)
+                set(IS_ROCKY_8 TRUE)
+                set(IS_ROCKY_9 FALSE)
+            elseif(ROCKY_MAJOR_VERSION EQUAL 9)
+                set(IS_ROCKY_8 FALSE)
+                set(IS_ROCKY_9 TRUE)
+            endif()
+        endif()
+    endif()
+endif()
+
 # File Resolver
 option(AR_FILERESOLVER_BUILD "Build the FileResolver" OFF)
 if("$ENV{AR_RESOLVER_NAME}" STREQUAL "fileResolver")
@@ -275,7 +313,11 @@ else()
         file(REAL_PATH ${AR_HOUDINI_ROOT} AR_HOUDINI_ROOT_RESOLVED)
         string(FIND ${AR_HOUDINI_ROOT_RESOLVED} "19.5" AR_HOUDINI_ROOT_IS_H195)
         if (${AR_HOUDINI_ROOT_IS_H195} STREQUAL "-1")
-            add_compile_definitions(_GLIBCXX_USE_CXX11_ABI=1)
+            if (IS_ROCKY_9)
+                add_compile_definitions(_GLIBCXX_USE_CXX11_ABI=1)
+            else()
+                add_compile_definitions(_GLIBCXX_USE_CXX11_ABI=0)
+            endif()
         else()
             message("Houdini 19.5 detected, switching to _GLIBCXX_USE_CXX11_ABI=0")
             add_compile_definitions(_GLIBCXX_USE_CXX11_ABI=0)
