@@ -2,11 +2,23 @@ import inspect
 import logging
 import os
 from functools import wraps
+from pathlib import Path
 
 try:
     from pxr import Ar
 except:
     from fnpxr import Ar
+
+
+def path_decompose(path):
+    path = path.replace('\\', '/')
+    tokens = path.split('/')
+    project_name = tokens[1]
+    d={}
+    d['project']=tokens[1]
+    d['rel_path']=Path(*tokens[2:])
+    return d
+
 
 # Init logger
 logging.basicConfig(format="%(asctime)s %(message)s", datefmt="%Y/%m/%d %I:%M:%S%p")
@@ -98,6 +110,7 @@ class ResolverContext:
         context.AddCachingPair("shot.usd", "/some/path/to/a/file.usd")
         return
 
+
     @staticmethod
     @log_function_args
     def ResolveAndCache(context, assetPath):
@@ -122,13 +135,20 @@ class ResolverContext:
             resolved_asset_path = "C:/sm_temp/Fixies5/models/chars/fixies/nolik/usd/nolik.main.usd"
         path_prefix='smassetfile:'
         if assetPath.startswith(path_prefix) :
-            root =   '/space2'
-            resolved_asset_path = assetPath.replace(path_prefix, root)
-            resolved_asset_path = resolved_asset_path.replace('Technolike', 'technolike')
+            project_name = path_decompose(assetPath)['project']
+            relative_path = path_decompose(assetPath)['rel_path']
+
+            if project_name=='Fixies5': root =   '/space1/fixies5'
+            if project_name=='Technolike': root =   '/space2/technolike'
+
+            resolved_asset_path = os.path.join(root, relative_path)
+
             context.AddCachingPair(assetPath, resolved_asset_path)
+            if resolved_asset_path==assetPath: 
+                print (f"Could not resolve {assetPath}")
         
-        context.ClearCachingPairs()
-        print (f"resolved_asset_path: {resolved_asset_path}")
+        # context.ClearCachingPairs()
+        # print (f"resolved_asset_path: {resolved_asset_path}")
         return resolved_asset_path
 
 
