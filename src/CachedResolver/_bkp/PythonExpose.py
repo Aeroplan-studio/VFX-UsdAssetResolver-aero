@@ -3,8 +3,6 @@ import logging
 import os
 from functools import wraps
 from pathlib import Path
-from functools import lru_cache
-import traceback 
 
 try:
     from pxr import Ar
@@ -12,77 +10,25 @@ except:
     from fnpxr import Ar
 
 
-try:
-    import smassetman.core.dbClient as cl
-    import smassetman.core.dbUtils as dbUtils
-except ImportError as err:
-    cl, dbUtils = None, None
+def path_decompose(path):
+    path = path.replace('\\', '/')
+    tokens = path.split('/')
+    project_name = tokens[1]
+    d={}
+    d['project']=tokens[1]
+    d['rel_path']=Path(*tokens[2:])
+    return d
 
-FARM_USER = 'farm'
-FARM_PASS = '12345678'
-SMASSETMAN_SERVER = 'https://smassetman.smeshariki.ru'
-SMPATH_PREFIX = 'smassetfile:'
 
 # Init logger
 logging.basicConfig(format="%(asctime)s %(message)s", datefmt="%Y/%m/%d %I:%M:%S%p")
 LOG = logging.getLogger("Python | {file_name}".format(file_name=__name__))
 LOG.setLevel(level=logging.INFO)
 
-class NoSmAssetManException(Exception):
-    def __init__():
-        self.message = 'No SmAssetMan found!'
-        super().__init__(self.message)
-
-class SmAssetManConnectionException(Exception):
-    def __init__():
-        self.message = 'SmAssetman Connection error'
-        super().__init__(self.message)
-
-class NoProjectFoundException(Exception):
-    def __init__(project_name : str):
-        self.message = f'No project found: {project_name}'
-        super().__init__(self.message)
-
-def get_assetman_connector():
-    try:
-        if cl is None:
-            raise NoSmAssetManException()
-        c = cl.Connection(SMASSETMAN_SERVER)
-        c.authenticate(FARM_USER, FARM_PASS)
-        api = c.api()
-        return c, api
-    except:
-        traceback.print_exc()
-        raise SmAssetManConnectionException()
-
-@lru_cache(maxsize = None)
-def get_project_root(project_name: str) -> str:
-    if dbUtils is None:
-        raise NoSmAssetManException()
-    connector, api = get_assetman_connector()
-    project = dbUtils.returnProjByName(connector, api, project_name)
-    if not project:
-        raise NoProjectException(project_name)
-    return project.dirmap['root']
-
-def aero_resolve_path(assetpath: str) -> str:
-    if not assetpath.startswith(SMPATH_PREFIX):
-        return assetpath
-    try:
-        tokens = assetpath.replace('\\', '/').split('/')
-        project_name = tokens[1]
-        relative_path = Path(*tokens[2:])
-        root = get_project_root(project_name)
-        LOG.info(f'@@@@@@@@@@@@@ {root}')
-        resolved_asset_path = os.path.join(root, relative_path)
-        return resolved_asset_path
-    except (NoSmAssetManException, SmAssetManConnectionException, NoProjectFoundException) as error:
-        LOG.info(error.message)
-        return assetpath
-        
 
 def log_function_args(func):
     """Decorator to print function call details."""
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         func_args = inspect.signature(func).bind(*args, **kwargs).arguments
@@ -92,7 +38,6 @@ def log_function_args(func):
         return func(*args, **kwargs)
 
     return wrapper
-
 
 
 class UnitTestHelper:
@@ -184,23 +129,23 @@ class ResolverContext:
         )
 
 
-        #resolved_asset_path=assetPath
-        # if assetPath == "my_test_usd.usd":
-        #     context.AddCachingPair("my_test_usd.usd", "C:/sm_temp/Fixies5/models/chars/fixies/nolik/usd/nolik.main.usd")
-        #     resolved_asset_path = "C:/sm_temp/Fixies5/models/chars/fixies/nolik/usd/nolik.main.usd"
-        # path_prefix='smassetfile:'
-        # if assetPath.startswith(path_prefix) :
-        #     project_name = path_decompose(assetPath)['project']
-        #     relative_path = path_decompose(assetPath)['rel_path']
+        resolved_asset_path=assetPath
+        if assetPath == "my_test_usd.usd":
+            context.AddCachingPair("my_test_usd.usd", "C:/sm_temp/Fixies5/models/chars/fixies/nolik/usd/nolik.main.usd")
+            resolved_asset_path = "C:/sm_temp/Fixies5/models/chars/fixies/nolik/usd/nolik.main.usd"
+        path_prefix='smassetfile:'
+        if assetPath.startswith(path_prefix) :
+            project_name = path_decompose(assetPath)['project']
+            relative_path = path_decompose(assetPath)['rel_path']
 
-        #     if project_name=='Fixies5': root =   '/space1/fixies5'
-        #     if project_name=='Technolike': root =   '/space2/technolike'
+            if project_name=='Fixies5': root =   '/space1/fixies5'
+            if project_name=='Technolike': root =   '/space2/technolike'
 
-        #     resolved_asset_path = os.path.join(root, relative_path)
-        resolved_asset_path = aero_resolve_path(assetPath)
-        context.AddCachingPair(assetPath, resolved_asset_path)
-        if resolved_asset_path==assetPath: 
-            print (f"Could not resolve {assetPath}")
+            resolved_asset_path = os.path.join(root, relative_path)
+
+            context.AddCachingPair(assetPath, resolved_asset_path)
+            if resolved_asset_path==assetPath: 
+                print (f"Could not resolve {assetPath}")
         
         # context.ClearCachingPairs()
         # print (f"resolved_asset_path: {resolved_asset_path}")
