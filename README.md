@@ -1,3 +1,8 @@
+для аутентификации в smassetman нужны две переменные
+export SMASSETMAN_AUTH_CREDS_FILE=/server/sm/sm_tools/scripts/creds/farm.json
+export SMASSETMAN_AUTH_METHOD=app_password
+
+
 | <img src="https://raw.githubusercontent.com/LucaScheller/VFX-UsdAssetResolver/main/tools/UsdAssetResolver_Logo.svg" width="128"> |  <h1> OpenUSD Asset Resolver </h1> |
 |--|--|
 

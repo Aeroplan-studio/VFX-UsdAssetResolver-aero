@@ -18,8 +18,6 @@ try:
 except ImportError as err:
     cl, dbUtils = None, None
 
-FARM_USER = 'farm'
-FARM_PASS = '12345678'
 SMASSETMAN_SERVER = 'https://smassetman.smeshariki.ru'
 SMPATH_PREFIX = 'smassetfile:'
 
@@ -48,7 +46,6 @@ def get_assetman_connector():
         if cl is None:
             raise NoSmAssetManException()
         c = cl.Connection(SMASSETMAN_SERVER)
-        c.authenticate(FARM_USER, FARM_PASS)
         api = c.api()
         return c, api
     except:
